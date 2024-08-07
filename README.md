@@ -50,3 +50,7 @@ To create a virtual environment called `venv` and install the required packages,
   ```
 
 Now you have successfully set up a virtual environment called `venv` and installed the required packages.
+
+## Usage
+
+Run ```python3 site_parser.py``` then follow the prompts.

@@ -1,8 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 from InquirerPy import inquirer
+from video_downloader import record_livestream
+import re
 
 BASE_URL = 'https://live.itftennis.com'
+OUTPUT_DIR = 'out'
 
 def fetch_page(url):
     response = requests.get(url)
@@ -37,12 +40,30 @@ def download_match_page(match_name, videos):
     if selected_video:
         src = BASE_URL + selected_video[1]
         html = fetch_page(src)
-        filename = f"out/{match_name.replace(' ', '_')}.html"
-        with open(filename, 'w', encoding='utf-8') as file:
-            file.write(html)
-        print(f"Downloaded {src} to {filename}")
+        return html
     else:
         print(f"Match {match_name} not found")
+        return None
+
+def get_stream_url(html_content):
+    # Parse the HTML content
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # Find the script tag containing videoconfig
+    script_tag = soup.find('script', text=re.compile(r'var videoconfig ='))
+    
+    if not script_tag:
+        return None
+    
+    # Extract the JavaScript content
+    script_content = script_tag.string
+    
+    # Use regex to find the streamUrl
+    match = re.search(r'"streamUrl"\s*:\s*"([^"]+)"', script_content)
+    
+    if match:
+        return match.group(1)
+    return None
 
 if __name__ == "__main__":
     url = BASE_URL + '/en/live-streams/'
@@ -53,4 +74,13 @@ if __name__ == "__main__":
         print("No video items found.")
     else:
         match_name = select_match(videos)
-        download_match_page(match_name, videos)
+        html = download_match_page(match_name, videos)
+        if not html:
+            print("The requested livestream page is unavailable.")
+
+    stream_url = get_stream_url(html)
+    print(stream_url)
+    if stream_url:
+        record_livestream(stream_url, f"{OUTPUT_DIR}/{match_name}.mp4")
+    else:
+        print("No stream URL found in the page.")

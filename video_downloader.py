@@ -14,7 +14,7 @@ def record_livestream(stream_url, output_file):
         'ffmpeg',
         '-i', stream_url,        # Input URL
         '-c', 'copy',            # Copy the codec (do not re-encode)
-        '-t', '00:10:00',        # Duration to record (e.g., 10 minutes in this example)
+        '-t', '03:00:00',        # Duration to record (e.g., 3 hours in this example)
         output_file
     ]
     
@@ -27,7 +27,7 @@ def record_livestream(stream_url, output_file):
 
 if __name__ == "__main__":
     # Example usage
-    stream_url = "https://lc-live-http-ipv4.akamaized.net/14879/5014139/mobile-ireland/master_delayed.m3u8?cid=14879&mid=52018503&ecid=5014139&pid=6&dtid=1&sid=787372327810&gc=rbg&gsd=u6o&grm=1&hdnts=ip=108.228.238.242~exp=1722640242~acl=%2F14879%2F5014139%2Fmobile-ireland%2F%2A~hmac=49e5df6a7016f8cf47fe7689c13c15ead582892283774fb115624b6a38abd937"
-    output_file = "livestream_recording.mp4"
+    stream_url = "https://lc-live-http-euw1-ipv4-p.hs.llnwd.net/e1/lt/limelight/5042293/mobile-ireland/token=p=85~e=1723158096~ip=104.2.24.180~cid=14879~mid=52285499~ecid=5042293~pid=6~dtid=1~sid=917500152047~gc=TTY~gsd=WyQ~grm=1~h=958618086d3b435f86b714385ebb5420/master_delayed.m3u8"
+    output_file = "out/livestream_recording.mp4"
     
     record_livestream(stream_url, output_file)
